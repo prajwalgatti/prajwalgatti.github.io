@@ -30,8 +30,8 @@
 		<img src="images/2.png" alt="img2" style="height:300px;"/> </button>
 	<button name="image" type="submit" value="3" id=img3 onclick="process_im_input('img3')">
 		<img src="images/3.png" alt="img3" style="height:300px;"/> </button>
-	<button name="image" type="submit" value="1" id=img1 onclick="process_im_input('img1')">
-		<img src="images/1.png" alt="img1" style="height:300px;"/> </button>
+	<!-- <button name="image" type="submit" value="1" id=img1 onclick="process_im_input('img1')">
+		<img src="images/1.png" alt="img1" style="height:300px;"/> </button> -->
 	<br><br>
 <input id="img_result" type="hidden"> </input>
 <br>
@@ -81,9 +81,15 @@ function move(img_item, lang) {
       clearInterval(id);
       width=0
       document.getElementById("vtnetP").className = "vtnet-text-green vtnet-animate-opacity";
+      
+      // document.getElementById("vtnetP").innerHTML = "<img src='images/" +
+		  //   img_item.value + ".png" +
+		  //   "' alt='result' style='height:300px;'/>";
+      
       document.getElementById("vtnetP").innerHTML = "<img src='images/" +
 		    img_item.value + "_" + lang.value + ".png" +
 		    "' alt='result' style='height:300px;'/>";
+
     } else {
       width++;
       elem.style.width = width + '%';
