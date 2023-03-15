@@ -1,0 +1,30 @@
+Installing the code
+----------------------
+1. install apache2
+	$sudo apt-get install apache2
+	$sudo service apache2 start
+2. start apache2 webserver
+	$sudo service apache2 start
+3. untar demopage.tar in your home area
+4. using superuser create softlink of index.html and img directory in /var/www/html/
+	# cd /var/www/html/
+	# ln -s <your home>/demopage/index.html index.html
+	# ln -s <your home>/demopage/img img
+5. service apache2 restart
+
+Naming conventions
+------------------------
+
+1. the input images are named as m1.jpg m2.jpg etc..
+2. the output images should be kept under img/output/
+3. naming convention m1-<Language>.jpg, m2-<Language>.jpg
+
+Adding new images
+--------------------
+
+1. Edit code starting line 24 till 29 in index.html to add new images to the list, name as per the convention specified above.
+2. Add the output images to img/output/ directory using nameing convention specified above.
+
+Adding new languages
+---------------------
+1. Edit the code section between line 37 to 40 
