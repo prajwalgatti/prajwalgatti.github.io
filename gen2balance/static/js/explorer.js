@@ -1,5 +1,5 @@
 /* ============================================================
-   Per-class explorer — interactive version of Fig. 4.
+   Per-class explorer - interactive version of Fig. 4.
    Dependency-free: builds an inline-SVG bar chart of the
    accuracy improvement (Gen2Balance - baseline) per class.
    Hover to preview, click to pin a detail panel.
@@ -10,7 +10,10 @@
   const SVGNS = "http://www.w3.org/2000/svg";
   const GROUP_COLORS = { head: "#2563eb", tail: "#db2777", fewshot: "#14855a", rareact: "#7c3aed" };
   const GROUP_LABEL = { head: "Head", tail: "Tail", fewshot: "Few-shot", rareact: "RareAct" };
-  const POS = "#14855a", NEG = "#dc2626";
+  const GROUP_LABEL_LONG = { head: "Head classes", tail: "Tail classes", fewshot: "Few-shot classes", rareact: "RareAct classes" };
+  const POS = "#14855a";
+  const NEG = "#d24b46";        // negative text - clearly red but not harsh
+  const NEG_BAR = "#e07b76";    // regression bars - soft red, present but not dominant
 
   const state = { all: [], benchmark: "K100-LT", baseline: "ce", sort: "size", pinned: null };
 
@@ -37,7 +40,7 @@
       const avg = gc.reduce((s, c) => s + gainOf(c), 0) / gc.length;
       const chip = el("div", "exp-chip");
       chip.innerHTML = `<span class="dot" style="background:${GROUP_COLORS[g]}"></span>
-        <span class="exp-chip-lab">${GROUP_LABEL[g]}</span>
+        <span class="exp-chip-lab">${GROUP_LABEL_LONG[g]}</span>
         <span class="exp-chip-val" style="color:${avg >= 0 ? POS : NEG}">${avg >= 0 ? "+" : ""}${avg.toFixed(1)}%</span>
         <span class="exp-chip-sub">avg gain · ${gc.length} cls</span>`;
       wrap.appendChild(chip);
@@ -50,7 +53,12 @@
     const W = host.clientWidth || 900, H = 300;
     const m = { t: 16, r: 8, b: 14, l: 42 };
     const cw = W - m.l - m.r, ch = H - m.t - m.b;
-    const yMin = -10, yMax = 25, range = yMax - yMin;     // fixed asymmetric range
+    const gains = cs.map(gainOf);
+    // y-range fits BOTH baselines (vs CE and vs BSCE) so the axis stays constant when toggling
+    const allDeltas = cs.flatMap(c => [c.acc_ours - c.acc_ce, c.acc_ours - c.acc_bsce]);
+    const yMax = Math.max(10, Math.ceil(Math.max(0, ...allDeltas) / 10) * 10);
+    const yMin = Math.min(0, Math.floor(Math.min(0, ...allDeltas) / 10) * 10);
+    const range = yMax - yMin;
     const yScale = v => m.t + ch * (1 - (Math.max(yMin, Math.min(yMax, v)) - yMin) / range);
     const y0 = yScale(0);
     const bw = cw / cs.length;
@@ -68,20 +76,27 @@
         const r = document.createElementNS(SVGNS, "rect");
         r.setAttribute("x", m.l + i * bw); r.setAttribute("y", m.t);
         r.setAttribute("width", (j - i) * bw); r.setAttribute("height", ch);
-        r.setAttribute("fill", GROUP_COLORS[cs[i].group]); r.setAttribute("opacity", "0.11");
+        r.setAttribute("fill", GROUP_COLORS[cs[i].group]); r.setAttribute("opacity", "0.06");
         svg.appendChild(r);
         const t = document.createElementNS(SVGNS, "text");
         t.setAttribute("x", m.l + (i + (j - i) / 2) * bw); t.setAttribute("y", m.t + 12);
         t.setAttribute("text-anchor", "middle"); t.setAttribute("class", "exp-band-lab");
         t.setAttribute("fill", GROUP_COLORS[cs[i].group]);
-        if ((j - i) * bw > 40) t.textContent = GROUP_LABEL[cs[i].group];
+        const segW = (j - i) * bw;
+        if (segW > 80) t.textContent = GROUP_LABEL_LONG[cs[i].group];
+        else if (segW > 34) t.textContent = GROUP_LABEL[cs[i].group];
         svg.appendChild(t);
         i = j;
       }
     }
 
-    // axis: zero line + y ticks
-    [-10, 0, 10, 20].forEach(v => {
+    // axis: zero line + y ticks (nice step, always including 0)
+    const step = range > 60 ? 20 : 10;
+    const ticks = [];
+    for (let t = Math.ceil(yMin / step) * step; t <= yMax + 0.01; t += step) ticks.push(t);
+    if (!ticks.includes(0)) ticks.push(0);
+    ticks.sort((a, b) => a - b);
+    ticks.forEach(v => {
       const yy = yScale(v);
       const ln = document.createElementNS(SVGNS, "line");
       ln.setAttribute("x1", m.l); ln.setAttribute("x2", W - m.r);
@@ -109,7 +124,7 @@
       const r = document.createElementNS(SVGNS, "rect");
       r.setAttribute("x", bx + bw * 0.12); r.setAttribute("y", by);
       r.setAttribute("width", Math.max(0.6, bw * 0.76)); r.setAttribute("height", bh);
-      r.setAttribute("fill", g >= 0 ? POS : NEG);
+      r.setAttribute("fill", g >= 0 ? POS : NEG_BAR);
       r.setAttribute("class", "exp-bar");
       r.dataset.idx = k;
       r.addEventListener("mouseenter", e => showTip(e, c, g));
@@ -151,16 +166,17 @@
   function hideTip() { if (tip) tip.style.display = "none"; }
 
   /* ---------- detail panel ---------- */
-  function videoSlot(label, src, poster) {
+  function videoSlot(label, src, emptyMsg) {
     if (src) {
       return `<div class="exp-vid"><video autoplay muted loop playsinline preload="metadata"
-        ${poster ? `poster="${poster}"` : ""}><source src="${src}" type="video/mp4"></video>
+        onloadeddata="try{this.currentTime=Math.min(0.6,(this.duration||2)/3)}catch(e){}">
+        <source src="${src}" type="video/mp4"></video>
         <span class="exp-vid-lab">${label}</span></div>`;
     }
     return `<div class="exp-vid exp-vid--ph"><div class="exp-vid-ph">
       <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6">
       <polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-      <span>${label}</span><small>clip not exported yet</small></div></div>`;
+      <span>${label}</span><small>${emptyMsg || "no clip"}</small></div></div>`;
   }
 
   function accBar(name, val, color) {
@@ -203,8 +219,8 @@
         <div>
           <div class="exp-sub">Real vs. generated sample</div>
           <div class="exp-vids">
-            ${videoSlot("Real", c.real_clip, "static/images/showcase_poster.jpg")}
-            ${videoSlot("Generated", c.gen_clip, "static/images/showcase_poster.jpg")}
+            ${videoSlot("Real", c.real_clip, "clip not available")}
+            ${videoSlot("Generated", c.gen_clip, c.group === "head" ? "head class, none needed" : "clip not available")}
           </div>
         </div>
       </div>`;
@@ -218,7 +234,7 @@
     return b;
   }
   function buildControls() {
-    // Kinetics (K100-LT) only — state.benchmark stays fixed; no benchmark toggle.
+    // Kinetics (K100-LT) only - state.benchmark stays fixed; no benchmark toggle.
     const segBase = $("#exp-base");
     segBase.appendChild(segbtn("baseline", "ce", "vs CE", true));
     segBase.appendChild(segbtn("baseline", "bsce", "vs Bal. Softmax", false));
@@ -249,11 +265,13 @@
   /* ---------- init ---------- */
   function init() {
     const mount = $("#explorer"); if (!mount) return;
-    fetch("static/data/perclass.json")
+    fetch("static/data/perclass.json", { cache: "no-cache" })
       .then(r => r.json())
       .then(d => {
         state.all = d.classes;
-        if (d.meta && d.meta.placeholder_accuracies) $("#exp-placeholder-note").style.display = "block";
+        // show the placeholder warning only if the displayed benchmark still has placeholders
+        const shownPh = state.all.some(c => c.benchmark === state.benchmark && c.placeholder);
+        if (shownPh) $("#exp-placeholder-note").style.display = "block";
         buildControls();
         // pin a high-impact default so the panel isn't empty
         const cs0 = current();

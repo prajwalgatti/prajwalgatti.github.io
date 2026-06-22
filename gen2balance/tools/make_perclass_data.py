@@ -25,10 +25,24 @@ import argparse, json, os, random
 from collections import Counter
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-ANN = os.path.join(REPO, "annotations")
-OUT = os.path.join(REPO, "webpage", "static", "data", "perclass.json")
+# annotations live under data/annotations/ (older layout had them at repo root)
+ANN = os.path.join(REPO, "data", "annotations")
+if not os.path.isdir(ANN):
+    ANN = os.path.join(REPO, "annotations")
+WEB = os.path.join(REPO, "webpage")
+OUT = os.path.join(WEB, "static", "data", "perclass.json")
+PCV = os.path.join(WEB, "static", "videos", "per_class")  # compressed clips (see prepare_per_class_clips.py)
 BENCHMARKS = ["K100-LT", "UCF-LT", "RareAct-K100-LT"]
 GEN_MARKER = "_generated_videos"  # generated clip paths contain this
+
+
+def clip_path(bench, lid, kind):
+    """Return web path to a compressed per-class clip if it exists, else None.
+    kind = 'real' or 'gen'. Only K100-LT clips were exported."""
+    if bench != "K100-LT":
+        return None
+    rel = f"static/videos/per_class/{lid}_{kind}.mp4"
+    return rel if os.path.exists(os.path.join(WEB, rel)) else None
 
 
 def label_of(line):
@@ -76,14 +90,35 @@ def placeholder_acc(group, n_real, rng):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--real-acc", default=None, help="JSON of real accuracies to use instead of placeholders")
+    ap.add_argument("--real-acc", default=None,
+                    help="real accuracies to use instead of placeholders; .json (key '<bench>|<id>' -> {ce,bsce,ours}) "
+                         "or .csv (columns benchmark,label_id,ce,bsce,ours; extra columns ignored)")
     ap.add_argument("--seed", type=int, default=7)
     args = ap.parse_args()
     rng = random.Random(args.seed)
 
     real_acc = {}
     if args.real_acc and os.path.exists(args.real_acc):
-        real_acc = json.load(open(args.real_acc))
+        if args.real_acc.lower().endswith(".csv"):
+            import csv
+            with open(args.real_acc, newline="") as f:
+                for row in csv.DictReader(f):
+                    # accept rows only once all three numbers are filled in
+                    if not (row.get("ce") and row.get("bsce") and row.get("ours")):
+                        continue
+                    key = f"{row['benchmark'].strip()}|{str(row['label_id']).strip()}"
+                    real_acc[key] = {k: float(row[k]) for k in ("ce", "bsce", "ours")}
+        else:
+            real_acc = json.load(open(args.real_acc))
+
+    # accept either fractions (0-1) or percentages (0-100): if everything looks
+    # like a fraction, scale to percent. Round to 1 decimal for clean display.
+    if real_acc:
+        hi = max(v[k] for v in real_acc.values() for k in ("ce", "bsce", "ours"))
+        scale = 100.0 if hi <= 1.5 else 1.0
+        for v in real_acc.values():
+            for k in ("ce", "bsce", "ours"):
+                v[k] = round(v[k] * scale, 1)
 
     classes, any_placeholder = [], False
     for bench in BENCHMARKS:
@@ -103,14 +138,18 @@ def main():
             if key in real_acc:
                 a = real_acc[key]
                 ce, bsce, ours = a["ce"], a["bsce"], a["ours"]
+                is_ph = False
             else:
                 any_placeholder = True
+                is_ph = True
                 ce, bsce, ours = placeholder_acc(group, n_real, rng)
             classes.append({
                 "id": int(lid), "name": name, "benchmark": bench, "group": group,
                 "n_real": n_real, "n_generated": n_gen,
                 "acc_ce": ce, "acc_bsce": bsce, "acc_ours": ours,
-                "real_clip": None, "gen_clip": None,
+                "placeholder": is_ph,
+                "real_clip": clip_path(bench, lid, "real"),
+                "gen_clip": clip_path(bench, lid, "gen"),
                 "src_real": real_s.get(lid), "src_gen": gen_s.get(lid),
             })
 

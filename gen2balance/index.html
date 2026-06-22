@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="static/css/style.css?v=5" />
+  <link rel="stylesheet" href="static/css/style.css?v=11" />
 </head>
 <body>
 
@@ -31,8 +31,8 @@
       <!-- ============ AUTHORS ============ -->
       <p class="authors">
         <span class="author"><a href="https://prajwalgatti.github.io/">Prajwal Gatti</a><sup>1</sup></span>
-        <span class="author"><a href="#">Simon Jenni</a><sup>2</sup></span><!-- TODO: Simon Jenni homepage -->
-        <span class="author"><a href="#">Fabian Caba Heilbron</a><sup>2</sup></span><!-- TODO: Fabian Caba Heilbron homepage -->
+        <span class="author"><a href="https://sjenni.github.io/">Simon Jenni</a><sup>2</sup></span>
+        <span class="author"><a href="https://fabiancaba.com/">Fabian Caba Heilbron</a><sup>2</sup></span>
         <span class="author"><a href="https://dimadamen.github.io/">Dima Damen</a><sup>1</sup></span>
       </p>
       <p class="affil"><sup>1</sup>University of Bristol &nbsp;&middot;&nbsp; <sup>2</sup>Adobe Research</p>
@@ -41,13 +41,14 @@
 
       <p class="tldr">
         <span class="tldr-tag">TL;DR</span>
-        We fill the long tail with <b>class-faithful generated videos</b> for rare actions, then train in
-        <b>two stages</b> &mdash; lifting tail, few-shot, and rare-action accuracy by large margins.
+        We address long-tailed video action recognition by filling the imbalance with synthetic videos from text-to-video models, and show that a two-stage training strategy works best, improving over current best methods.
+        <!-- We fill the long tail with <b>class-faithful generated videos</b> for rare actions, then train in -->
+        <!-- <b>two stages</b>, lifting tail, few-shot, and rare-action accuracy by large margins. -->
       </p>
 
       <!-- ============ BUTTONS ============
            TODO(author): point href="#" to the real URLs (arXiv, dataset, Twitter/X thread).
-           Code button assumes the repo is github.com/prajwalgatti/gen2balance — fix if different. -->
+           Code button assumes the repo is github.com/prajwalgatti/gen2balance, fix if different. -->
       <div class="buttons">
         <a class="btn" href="#"><!-- TODO: arXiv abstract URL -->
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
@@ -57,7 +58,7 @@
           <svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.75.41-1.27.74-1.56-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.42.36.8 1.08.8 2.18v3.23c0 .31.2.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
           Code
         </a>
-        <a class="btn btn--accent" href="#"><!-- TODO: dataset download (HF / Drive) -->
+        <a class="btn btn--accent" href="https://uob-my.sharepoint.com/:f:/g/personal/wq23021_bristol_ac_uk/IgA-JUlcNvFBRoIGe20gxxEUATkJc-aZQxiznE7KmAlKBuk?e=RJ4rYn">
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
           Dataset (140K clips)
         </a>
@@ -82,11 +83,7 @@
           <source src="static/videos/showcase.mp4" type="video/mp4" />
         </video>
         <figcaption>
-          Text-to-video generation has advanced rapidly &mdash; but are its outputs <b>convincing and class-faithful</b>
-          enough to train action recognisers on the long tail? We put this to the test. For each of six actions, we show
-          a few <b>real</b> training clips alongside <b>generated</b> samples from our pipeline. Despite known concerns about
-          implausible physics and unnatural motion, we find that &mdash; when carefully prompted &mdash; today's generative
-          models produce videos faithful enough to reach state-of-the-art long-tailed video action recognition.
+          Can text-to-video models solve long-tailed action recognition? Above, we compare <b>real</b> training clips with <b>generated</b> samples from our pipeline across six actions. Despite known issues with synthetic physics, we show that carefully prompted videos are <b>convincing and class-faithful</b> enough to reach state-of-the-art performance.
         </figcaption>
       </figure>
     </div>
@@ -98,18 +95,20 @@
       <div class="section-eyebrow">Abstract</div>
       <h2 class="section-title">What is Gen2Balance?</h2>
       <div class="abstract-box">
-        We address the problem of training on long-tailed data for video action recognition. We propose to augment the
+      <span class="brand">Gen2Balance</span> is a framework that tackles long-tailed video action recognition by converting imbalanced datasets into a balanced mix of real and synthetic video clips. We augment minority classes using a text-to-video generative model, which is conditioned on diverse prompts grounded in real training exemplars and detailed action profiles. To effectively learn from this augmented data, Gen2Balance employs a two-stage training strategy that mitigates synthetic domain shift. Evaluated on long-tailed versions of standard benchmarks, UCF-101 (<b>UCF-LT</b>) and a temporally challenging Kinetics subset (<b>K100-LT</b>), our approach surpasses the strongest baselines, exhibiting significant accuracy gains for tail and few-shot actions.
+        <!-- We address the problem of training on long-tailed data for video action recognition. We propose to augment the
         training set using a text-to-video generative model conditioned on diverse text prompts grounded in action profiles
         and training exemplars. Our approach, <span class="brand">Gen2Balance</span>, converts an imbalanced training set into
         a balanced combination of real and generated video clips. To effectively learn from such data, we employ a two-stage
         training strategy that mitigates domain shift and yields significant improvements. We evaluate on long-tailed versions
         of standard benchmarks: UCF-101 (<b>UCF-LT</b>) and a 100-class subset of Kinetics (<b>K100-LT</b>) selected to
         prioritise temporally challenging actions. Gen2Balance improves accuracy over the strongest baselines for long-tailed
-        learning by <b>5.1%</b> and <b>7.0%</b> on the respective datasets. On rare actions from the RareAct dataset
+        learning on both benchmarks, with significant gains in tail and few-shot performance. -->
+        <!-- , achieving <b>5.1%</b> and <b>7.0%</b> on the respective datasets. On rare actions from the RareAct dataset
         (<i>e.g., cut keyboard</i>), Gen2Balance improves accuracy by <b>31.9%</b>, demonstrating effectiveness for scarce
         actions. By varying the amount of synthetic data added, we show that partial balancing already achieves
         <b>79%</b> of the performance gains at <b>27%</b> of the compute cost on K100-LT, highlighting the practical
-        scalability of Gen2Balance.
+        scalability of Gen2Balance. -->
       </div>
     </div>
   </section>
@@ -120,24 +119,20 @@
       <h2 class="section-title">Contributions</h2>
       <div class="cards cards--tight">
         <div class="card">
-          <div class="num">1</div>
-          <h4>Generative balancing</h4>
+          <div class="card-head"><span class="num">1</span><h4>Generative balancing</h4></div>
           <p>We balance long-tailed video datasets with synthetic clips from a pre-trained text-to-video model.</p>
         </div>
         <div class="card">
-          <div class="num">2</div>
-          <h4>A pipeline &amp; a released dataset</h4>
+          <div class="card-head"><span class="num">2</span><h4>A pipeline &amp; a released dataset</h4></div>
           <p>An automatic LLM-driven pipeline (<b>Gemini&nbsp;2.5&nbsp;Pro</b> + <b>WAN&nbsp;2.1</b>) for diverse, class-faithful
-             prompts &mdash; and a public release of <b>140K videos</b> across <b>223 classes</b>.</p>
+             prompts, and a public release of <b>140K videos</b> across <b>223 classes</b>.</p>
         </div>
         <div class="card">
-          <div class="num">3</div>
-          <h4>A study of training strategies</h4>
+          <div class="card-head"><span class="num">3</span><h4>A study of training strategies</h4></div>
           <p>Two-stage training (combined&nbsp;→&nbsp;real) with a class-balanced loss using <i>real</i>-data margins works best.</p>
         </div>
         <div class="card">
-          <div class="num">4</div>
-          <h4>State-of-the-art results</h4>
+          <div class="card-head"><span class="num">4</span><h4>State-of-the-art results</h4></div>
           <p>Up to <b>+6.7%</b> (K100-LT) and <b>+5.5%</b> (UCF-LT few-shot) over the strongest baselines, and <b>+31.9%</b>
              on rare RareAct actions.</p>
         </div>
@@ -208,14 +203,14 @@
       <p class="lead" style="text-align:center;max-width:800px;margin:0 auto 26px;color:var(--ink-soft);">
         We train in two stages. First, on the balanced set of <b>real + generated</b> clips with a class-balanced loss whose
         margins come from the <i>real</i>-data frequencies. Then, a short fine-tuning stage on the <b>real</b> long-tailed data
-        corrects the small domain shift between real and generated videos. Evaluation is standard, on the held-out test set.
+        corrects any shift between real and generated videos. Evaluation is standard, on the held-out test set.
       </p>
       <figure class="fig">
-        <img src="static/images/fig_training.png" alt="The Gen2Balance two-stage training strategy diagram." />
+        <img src="static/images/gen2balance_training.svg" alt="The Gen2Balance two-stage training strategy diagram." />
         <figcaption>
           <b>Two-stage training.</b> Stage 1 trains on the filled dataset
           (D<sub>aug</sub> = D<sub>train</sub> &cup; D<sub>gen</sub>) with Balanced Softmax; Stage 2 fine-tunes on the real data
-          with the same loss to rectify domain shift.
+          with the same loss.
         </figcaption>
       </figure>
     </div>
@@ -253,16 +248,17 @@
       <!-- ============ INTERACTIVE PER-CLASS EXPLORER ============ -->
       <div id="explorer" style="margin-top:46px;">
         <div class="section-eyebrow">Interactive</div>
-        <h3 style="text-align:center;">Explore the gains, class by class <span style="font-weight:500;color:var(--muted);font-size:15px;">(K100-LT)</span></h3>
+        <h3 style="text-align:center;margin-bottom:6px;">Explore the per-class gains</h3>
+        <p style="text-align:center;margin:0 0 14px;"><span class="exp-bench-badge">Benchmark&nbsp;·&nbsp;K100-LT</span></p>
         <p style="text-align:center;color:var(--ink-soft);max-width:760px;margin:0 auto 18px;font-size:15px;">
-          Each bar is one of the 100 K100-LT action classes &mdash; its height is how much Gen2Balance improves over the
+          Each bar is one of the <b>100 K100-LT</b> action classes, its height is how much Gen2Balance improves over the
           baseline. <b>Hover</b> for details, <b>click</b> a bar to inspect a class: its real-vs-generated data mix, accuracy
           breakdown, and sample clips. Notice the gains grow toward the data-starved tail and few-shot classes.
         </p>
 
         <p id="exp-placeholder-note" class="placeholder-note" style="display:none;margin-bottom:16px;">
           📊 Class names, head/tail/few-shot groups and the real/generated <b>counts are real</b> (from
-          <code>annotations/</code>). The <b>accuracy values are placeholders</b> &mdash; regenerate with your numbers via
+          <code>annotations/</code>). The <b>accuracy values are placeholders</b>, regenerate with your numbers via
           <code>webpage/tools/make_perclass_data.py --real-acc &lt;file&gt;</code>, and export clips to fill the video slots.
         </p>
 
@@ -274,19 +270,10 @@
         <div id="exp-summary" class="exp-summary"></div>
         <div class="exp-chartwrap"><div id="exp-chart"></div></div>
         <p class="exp-hint">Bars: <span style="color:var(--accent);font-weight:700">green</span> = improvement,
-          <span style="color:#dc2626;font-weight:700">red</span> = regression. Shaded bands group head / tail / few-shot classes.</p>
+          <span style="color:#d24b46;font-weight:700">red</span> = regression. Shaded bands group head / tail / few-shot classes.</p>
 
         <div id="exp-detail" class="exp-detail"></div>
       </div>
-
-      <h3 style="text-align:center;margin-top:46px;">Qualitative comparison</h3>
-      <figure class="fig">
-        <img src="static/images/fig_qualitative.png" alt="Qualitative comparison of CE, Logit Adjustment, and Gen2Balance." />
-        <figcaption>
-          <b>Qualitative results</b> across K100-LT, UCF-LT, and RareAct, comparing Cross-Entropy, Logit Adjustment, and
-          Gen2Balance on the target category. Gen2Balance recovers the correct action on cases the baselines miss.
-        </figcaption>
-      </figure>
     </div>
   </section>
 
@@ -294,30 +281,28 @@
   <section id="scaling">
     <div class="container">
       <h2 class="section-title">How much compute do you actually need?</h2>
-      <p class="lead" style="text-align:center;max-width:800px;margin:0 auto 26px;color:var(--ink-soft);">
-        Unlike collecting real data, generation is unbounded &mdash; but you don't need to <i>fully</i> balance to get most
-        of the benefit. We vary the filling threshold <b>B</b> (how many clips per class) and track accuracy against the
-        generation cost in GPU-hours.
+      <p class="lead" style="text-align:center;max-width:820px;margin:0 auto 22px;color:var(--ink-soft);">
+        Generation is unbounded, but you don't need to <i>fully</i> balance to get most of the benefit. Drag the
+        <b>filling threshold K</b> below (or hover the left plot): the left shows accuracy and generation cost, the right shows
+        how the long-tailed K100-LT distribution gets topped up with generated clips.
       </p>
 
-      <div class="scaling-grid">
-        <figure class="fig" style="margin:0;">
-          <img src="static/images/fig_scaling.png" alt="Effect of scaling generated data on K100-LT: accuracy vs. filling threshold B and GPU hours." />
-          <figcaption>
-            <b>Effect of scaling generated data (K100-LT).</b> Accuracy vs. filling threshold <b>B</b> (bottom axis) and the
-            corresponding generation cost in GPU-hours (top axis). Gains saturate quickly: most of the improvement is already
-            captured well before full balancing.
-          </figcaption>
-        </figure>
-
-        <div class="takeaway">
-          <span class="takeaway-tag">Takeaway</span>
-          <p>Partial balancing (<b>B&nbsp;=&nbsp;330</b>) recovers <b>+6.4%</b> average and <b>+13.5%</b> few-shot accuracy
-             &mdash; close to full balancing's <b>+8.1%</b> / <b>+13.5%</b> &mdash; at just <b>27%</b> of the generation
-             compute (<b>2.5K</b> vs <b>9.2K</b> GPU-hours).</p>
-          <p class="takeaway-foot">You can capture the bulk of the gains for a fraction of the cost &mdash; and this is a
-             one-time offline cost that shrinks as generative models get faster.</p>
+      <!-- ============ INTERACTIVE SCALING VIZ (built by scaling.js) ============ -->
+      <div id="scaling-viz">
+        <div class="sv-panels">
+          <div class="sv-card"><div class="sv-cap">Accuracy &amp; cost vs. K</div><div id="sv-left"></div></div>
+          <div class="sv-card"><div class="sv-cap">Training-set size per class</div><div id="sv-right"></div></div>
         </div>
+        <div id="sv-control"></div>
+      </div>
+
+      <div class="takeaway" style="margin-top:22px;">
+        <span class="takeaway-tag">Takeaway</span>
+        <p>Partial balancing (<b>K&nbsp;=&nbsp;330</b>) recovers <b>+6.4%</b> average and <b>+13.5%</b> few-shot accuracy,
+           close to full balancing's <b>+8.1%</b> / <b>+13.5%</b>, at just <b>27%</b> of the generation compute
+           (<b>2.5K</b> vs <b>9.2K</b> GPU-hours).</p>
+        <p class="takeaway-foot">You can capture the bulk of the gains for a fraction of the cost, and this is a one-time
+           offline cost that shrinks as generative models get faster.</p>
       </div>
     </div>
   </section>
@@ -364,12 +349,12 @@
         <a href="https://github.com/MCG-NJU/VideoMAE/blob/main/LICENSE">CC&nbsp;BY-NC&nbsp;4.0</a> (inherited from VideoMAE).
       </p>
       <p style="margin-top:14px;color:var(--muted);">
-        Website template &mdash; feel free to reuse. Built as a static page for GitHub Pages.
+        Website template, feel free to reuse. Built as a static page for GitHub Pages.
       </p>
     </div>
   </footer>
 
-  <script src="static/js/index.js?v=5"></script>
-  <script src="static/js/explorer.js?v=5"></script>
+  <script src="static/js/index.js?v=11"></script>
+  <script src="static/js/explorer.js?v=11"></script>
 </body>
 </html>
