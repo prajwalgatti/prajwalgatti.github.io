@@ -24,9 +24,9 @@
   const NREAL = [990,879,845,738,724,696,622,536,526,463,408,401,355,349,309,304,265,240,236,232,214,204,188,182,179,174,158,149,144,140,134,132,124,110,105,102,98,87,83,80,78,69,67,62,61,60,56,53,50,49,45,43,41,39,37,36,35,33,30,29,28,27,25,25,23,23,23,22,21,20,19,19,17,16,16,15,14,14,13,13,12,11,11,11,10,10,10,10,9,8,8,8,7,7,7,6,6,6,6,5];
   const SERIES = [
     { key: "avg",  label: "Average", color: "#d62728", dash: false },
-    { key: "few",  label: "Few",     color: "#16a34a", dash: false },
-    { key: "tail", label: "Tail",    color: "#db2777", dash: true  },
-    { key: "head", label: "Head",    color: "#2563eb", dash: true  },
+    { key: "few",  label: "Few",     color: "#2ed26a", dash: false },
+    { key: "tail", label: "Tail",    color: "#ff9bc8", dash: true  },
+    { key: "head", label: "Head",    color: "#9edaff", dash: true  },
   ];
   const BLUE = "#2563eb", GREEN = "#16a34a";
   const KMAX = 990, AMIN = 47, AMAX = 90;
@@ -41,8 +41,8 @@
   function renderLeft() {
     const host = $("#sv-left"); if (!host) return;
     host.innerHTML = "";
-    const W = host.clientWidth || 520, H = 290;
-    const m = { t: 30, r: 16, b: 40, l: 46 };
+    const W = host.clientWidth || 520, H = 300;
+    const m = { t: 40, r: 16, b: 40, l: 46 };
     const x = k => m.l + (k / KMAX) * (W - m.l - m.r);
     const y = a => m.t + (1 - (a - AMIN) / (AMAX - AMIN)) * (H - m.t - m.b);
     const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", height: H, class: "sv-svg" });
@@ -61,10 +61,10 @@
       svg.appendChild(txt(x(k), H - m.b + 16, k, "sv-ax", { "text-anchor": "middle" }));
       const g = gpuAt[k] != null ? gpuAt[k] : "";
       const gl = g === 0 ? "0" : (g ? (g / 1000).toFixed(1) + "K" : "");
-      svg.appendChild(txt(x(k), m.t - 14, gl, "sv-ax", { "text-anchor": "middle" }));
+      svg.appendChild(txt(x(k), m.t - 13, gl, "sv-ax", { "text-anchor": "middle" }));
     });
-    svg.appendChild(txt((m.l + W - m.r) / 2, H - 4, "Filling threshold K", "sv-axl", { "text-anchor": "middle" }));
-    svg.appendChild(txt((m.l + W - m.r) / 2, 10, "Generation cost (GPU-hours)", "sv-axl", { "text-anchor": "middle" }));
+    svg.appendChild(txt((m.l + W - m.r) / 2, H - 4, "Filling threshold B", "sv-axl", { "text-anchor": "middle" }));
+    svg.appendChild(txt((m.l + W - m.r) / 2, 11, "Generation cost (GPU-hours)", "sv-axl", { "text-anchor": "middle" }));
 
     // max class size marker
     svg.appendChild(S("line", { x1: x(KMAX), x2: x(KMAX), y1: m.t, y2: H - m.b, stroke: "#b8c0cc", "stroke-dasharray": "3 3" }));
@@ -80,14 +80,13 @@
       svg.appendChild(S("circle", { cx: x(K[ki]), cy: y(ACC[s.key][ki]), r: 4.5, fill: s.color, stroke: "#fff", "stroke-width": 1.5 }));
     });
 
-    // legend
-    let lx = m.l + 6, ly = m.t + 6;
-    SERIES.forEach(s => {
-      const g = S("g", {});
-      g.appendChild(S("line", { x1: lx, x2: lx + 16, y1: ly, y2: ly, stroke: s.color, "stroke-width": s.dash ? 2 : 2.8, "stroke-dasharray": s.dash ? "5 4" : "0" }));
-      g.appendChild(txt(lx + 20, ly + 4, s.label, "sv-leg"));
-      svg.appendChild(g);
-      lx += 20 + s.label.length * 7 + 16;
+    // legend (bottom-right, where the plot is empty)
+    const segW = SERIES.map(s => 20 + s.label.length * 6.5 + 14);
+    let lx = W - m.r - segW.reduce((a, b) => a + b, 0), ly = H - m.b - 8;
+    SERIES.forEach((s, i) => {
+      svg.appendChild(S("line", { x1: lx, x2: lx + 16, y1: ly, y2: ly, stroke: s.color, "stroke-width": s.dash ? 2 : 2.8, "stroke-dasharray": s.dash ? "5 4" : "0" }));
+      svg.appendChild(txt(lx + 20, ly + 4, s.label, "sv-leg"));
+      lx += segW[i];
     });
 
     // hover scrub: nearest K
@@ -135,14 +134,15 @@
     // threshold line at K
     if (Kc > 0) {
       svg.appendChild(S("line", { x1: m.l, x2: W - m.r, y1: y(Kc), y2: y(Kc), stroke: "#0f1722", "stroke-width": 1.4, "stroke-dasharray": "5 4", opacity: 0.7 }));
-      svg.appendChild(txt(W - m.r, y(Kc) - 5, "K = " + Kc, "sv-klab", { "text-anchor": "end" }));
+      svg.appendChild(txt(W - m.r, y(Kc) - 5, "B = " + Kc, "sv-klab", { "text-anchor": "end" }));
     }
 
-    // legend
-    svg.appendChild(S("rect", { x: m.l + 6, y: m.t + 2, width: 10, height: 10, fill: BLUE, rx: 2 }));
-    svg.appendChild(txt(m.l + 20, m.t + 11, "real", "sv-leg"));
-    svg.appendChild(S("rect", { x: m.l + 60, y: m.t + 2, width: 10, height: 10, fill: GREEN, rx: 2 }));
-    svg.appendChild(txt(m.l + 74, m.t + 11, "generated", "sv-leg"));
+    // legend (top-right, above the short tail bars)
+    const lx0 = W - m.r - 116;
+    svg.appendChild(S("rect", { x: lx0, y: m.t + 2, width: 10, height: 10, fill: BLUE, rx: 2 }));
+    svg.appendChild(txt(lx0 + 14, m.t + 11, "real", "sv-leg"));
+    svg.appendChild(S("rect", { x: lx0 + 48, y: m.t + 2, width: 10, height: 10, fill: GREEN, rx: 2 }));
+    svg.appendChild(txt(lx0 + 62, m.t + 11, "generated", "sv-leg"));
     host.appendChild(svg);
   }
 
@@ -151,7 +151,7 @@
     const host = $("#sv-control"); if (!host) return;
     if (!host.dataset.built) {
       host.innerHTML =
-        `<input id="sv-slider" type="range" min="0" max="${K.length - 1}" step="1" value="${ki}" aria-label="Filling threshold K" />
+        `<input id="sv-slider" type="range" min="0" max="${K.length - 1}" step="1" value="${ki}" aria-label="Filling threshold B" />
          <div id="sv-readout"></div>`;
       host.dataset.built = "1";
       $("#sv-slider").addEventListener("input", e => setK(+e.target.value));
@@ -160,7 +160,7 @@
     const dAvg = (ACC.avg[ki] - ACC.avg[0]).toFixed(1);
     const gpu = GPU[ki] === 0 ? "0" : (GPU[ki] / 1000).toFixed(1) + "K";
     $("#sv-readout").innerHTML =
-      `<span class="sv-ro-k">K = ${K[ki]}</span>` +
+      `<span class="sv-ro-k">B = ${K[ki]}</span>` +
       `<span class="sv-ro"><b>${GEN[ki].toLocaleString()}</b> generated clips</span>` +
       `<span class="sv-ro"><b>${gpu}</b> GPU-hours</span>` +
       `<span class="sv-ro">avg accuracy <b>${ACC.avg[ki].toFixed(1)}%</b> <span class="sv-delta">(+${dAvg})</span></span>`;
