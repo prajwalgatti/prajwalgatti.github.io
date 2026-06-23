@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="static/css/style.css?v=17" />
+  <link rel="stylesheet" href="static/css/style.css?v=22" />
 </head>
 <body>
 
@@ -43,7 +43,7 @@
            TODO(author): point href="#" to the real URLs (arXiv, dataset, Twitter/X thread).
            Code button assumes the repo is github.com/prajwalgatti/gen2balance, fix if different. -->
       <div class="buttons">
-        <a class="btn" href="#"><!-- TODO: arXiv abstract URL -->
+        <a class="btn" href="https://arxiv.org/abs/2606.22416">
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
           arXiv
         </a>
@@ -59,15 +59,15 @@
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
           BibTeX
         </a>
-        <a class="btn btn--ghost" href="#"><!-- TODO: Twitter/X thread URL -->
+        <!-- <a class="btn btn--ghost" href="#">
           <svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           Thread
-        </a>
+        </a> -->
       </div>
 
       <!-- <details class="tldr-details"> -->
         <!-- <summary class="tldr-summary">Read the TL;DR<span class="tldr-chev">&#9662;</span></summary> -->
-        <p class="tldr-body"><b>TL;DR:</b> We address long-tailed video action recognition by filling the imbalance with synthetic videos from text-to-video generationmodels, and show that a two-stage training strategy works best, improving over current best methods.</p>
+        <p class="tldr-body"><b>TL;DR:</b> We address long-tailed video action recognition by filling the imbalance with synthetic videos from text-to-video generation models, and show that a two-stage training strategy works best, improving over current best methods.</p>
       <!-- </details> -->
     </div>
   </header>
@@ -113,6 +113,7 @@
            box auto-loads its clip from static/videos/pipeline/ and falls back to the dashed
            placeholder if the file is missing. To showcase a different class, swap the clip
            filenames in the <video src> tags below and the .pipe-chip label. -->
+      <div class="pipe-fit">
       <div class="pipeline">
         <div class="pipe-node">
           <div class="pipe-cap">Action class</div>
@@ -148,6 +149,7 @@
           <div class="pipe-ph pipe-ph--gen"><video class="pipe-vid" src="static/videos/pipeline/36_203.mp4" autoplay muted loop playsinline preload="metadata" onloadeddata="this.classList.add('loaded')" onerror="this.remove()"></video><span>gen</span></div>
           <div class="pipe-sub">added to the training set</div>
         </div>
+      </div>
       </div>
     </div>
   </section>
@@ -396,8 +398,8 @@
     </div>
   </footer>
 
-  <script src="static/js/index.js?v=17"></script>
-  <script src="static/js/explorer.js?v=17"></script>
-  <script src="static/js/scaling.js?v=17"></script>
+  <script src="static/js/index.js?v=22"></script>
+  <script src="static/js/explorer.js?v=22"></script>
+  <script src="static/js/scaling.js?v=22"></script>
 </body>
 </html>

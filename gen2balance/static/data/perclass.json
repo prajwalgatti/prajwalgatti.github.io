@@ -1414,7 +1414,7 @@
    "acc_ours": 86.0,
    "placeholder": false,
    "real_clip": "static/videos/per_class/87_real.mp4",
-   "gen_clip": null,
+   "gen_clip": "static/videos/per_class/87_gen.mp4",
    "src_real": "Kinetics-400/videos_train/8fqxUtHLyoE.mp4",
    "src_gen": "Kinetics-400/K100_generated_videos/87_0.mp4"
   },

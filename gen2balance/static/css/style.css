@@ -50,17 +50,13 @@ a:hover { text-decoration: underline; }
 
 .venue {
   display: inline-block;
-  font-size: 15.5px;
+  font-size: 24px;
   font-weight: 700;
-  letter-spacing: .07em;
+  letter-spacing: .04em;
   text-transform: uppercase;
   color: var(--accent-dk);
-  background: rgba(20,133,90,.10);
-  border: 1px solid rgba(20,133,90,.24);
-  padding: 7px 18px;
-  border-radius: 999px;
 }
-.venue-line { margin: 16px 0 0; }
+.venue-line { margin: 10px 0 2px; }
 
 /* collapsible TL;DR (subtle toggle, below the buttons) */
 .tldr-details { max-width: 720px; margin: 14px auto 0; text-align: center; }
@@ -138,27 +134,27 @@ a:hover { text-decoration: underline; }
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
-  margin: 26px auto 4px;
+  margin: 15px auto 4px;
 }
+/* dark rounded-pill publication buttons (Nerfies / WiLoR style) */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
+  gap: 9px;
+  padding: 10px 20px;
   border-radius: 999px;
   font-weight: 600;
-  font-size: 14.5px;
-  background: var(--ink);
+  font-size: 15px;
+  background: #363636;
   color: #fff;
-  border: 1px solid var(--ink);
-  transition: transform .08s ease, box-shadow .15s ease, background .15s ease;
+  border: none;
+  transition: background .18s ease;
 }
-.btn:hover { text-decoration: none; transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn:hover { text-decoration: none; background: #1f1f1f; }
 .btn .ico { width: 17px; height: 17px; display: inline-block; }
-.btn--ghost { background: #fff; color: var(--ink); border-color: var(--line); }
-.btn--ghost:hover { border-color: var(--accent); color: var(--accent-dk); }
-.btn--accent { background: var(--accent); border-color: var(--accent); }
-.btn--accent:hover { background: var(--accent-dk); }
+/* keep all buttons the same dark pill (modifiers retained for markup compatibility) */
+.btn--ghost, .btn--accent { background: #363636; color: #fff; border: none; }
+.btn--ghost:hover, .btn--accent:hover { background: #1f1f1f; }
 
 /* ---------- Sections ---------- */
 section { padding: 52px 0; border-bottom: 1px solid var(--line); }
@@ -418,17 +414,21 @@ footer a { color: var(--ink-soft); }
 .footer-note { max-width: 680px; margin: 0 auto; }
 
 /* ---------- Generation pipeline diagram ---------- */
+/* Fixed-width diagram scaled to fit by JS (fitPipeline), so it shrinks like an
+   image instead of reflowing on small screens. */
+.pipe-fit { width: 100%; overflow: hidden; }
 .pipeline {
   display: flex;
   align-items: stretch;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 10px;
+  width: 880px;
+  transform-origin: top left;
 }
 .pipe-node {
-  flex: 1 1 200px;
-  min-width: 180px;
-  max-width: 270px;
+  flex: 1 1 0;
+  min-width: 0;
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -474,11 +474,6 @@ footer a { color: var(--ink-soft); }
   opacity: 0; transition: opacity .35s ease; z-index: 1;
 }
 .pipe-vid.loaded { opacity: 1; }   /* fades in over the dashed placeholder once a clip loads */
-@media (max-width: 760px) {
-  .pipeline { flex-direction: column; align-items: stretch; }
-  .pipe-node { max-width: none; }
-  .pipe-arrow { transform: rotate(90deg); justify-content: center; padding: 2px 0; }
-}
 
 /* ---------- Per-class explorer ---------- */
 .exp-controls { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; margin: 0 0 18px; }

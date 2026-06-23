@@ -105,6 +105,33 @@ function copyBibtex() {
   else init();
 })();
 
+/* Scale the fixed-width generation pipeline to fit its container, so it shrinks
+   proportionally (like an image) instead of reflowing to a column on phones. */
+(function () {
+  function fitPipeline() {
+    document.querySelectorAll(".pipe-fit").forEach(function (f) {
+      var p = f.querySelector(".pipeline");
+      if (!p) return;
+      p.style.transform = "none";
+      p.style.marginLeft = "0";
+      var nw = p.offsetWidth, avail = f.clientWidth;
+      if (!nw || !avail) return;   // not laid out yet — leave unscaled; a later run will fix it
+      var nh = p.offsetHeight;
+      var s = Math.min(1, avail / nw);
+      p.style.transformOrigin = "top left";
+      p.style.transform = "scale(" + s + ")";
+      p.style.marginLeft = ((avail - nw * s) / 2) + "px";
+      f.style.height = (nh * s) + "px";
+    });
+  }
+  function fitSoon() { requestAnimationFrame(fitPipeline); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fitSoon);
+  else fitSoon();
+  window.addEventListener("load", fitSoon);                 // re-fit after fonts/videos settle
+  setTimeout(fitPipeline, 250); setTimeout(fitPipeline, 800);
+  var t; window.addEventListener("resize", function () { clearTimeout(t); t = setTimeout(fitPipeline, 120); });
+})();
+
 function fallback(text, btn) {
   const ta = document.createElement('textarea');
   ta.value = text;

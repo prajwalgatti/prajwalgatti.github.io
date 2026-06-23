@@ -220,7 +220,7 @@
           <div class="exp-sub">Real vs. generated sample</div>
           <div class="exp-vids">
             ${videoSlot("Real", c.real_clip, "clip not available")}
-            ${videoSlot("Generated", c.gen_clip, c.group === "head" ? "head class, none needed" : "clip not available")}
+            ${videoSlot("Generated", c.gen_clip, c.n_generated === 0 ? "no generated clips needed" : "clip not available")}
           </div>
         </div>
       </div>`;
