@@ -40,9 +40,7 @@ a:hover { text-decoration: underline; }
 
 /* ---------- Hero ---------- */
 .hero {
-  background:
-    radial-gradient(1200px 500px at 50% -200px, rgba(20,133,90,.10), transparent 60%),
-    linear-gradient(180deg, var(--bg-soft), var(--bg));
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
   padding: 64px 0 40px;
   text-align: center;
@@ -58,30 +56,16 @@ a:hover { text-decoration: underline; }
 }
 .venue-line { margin: 10px 0 2px; }
 
-/* collapsible TL;DR (subtle toggle, below the buttons) */
-.tldr-details { max-width: 720px; margin: 14px auto 0; text-align: center; }
-.tldr-summary {
-  display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
-  list-style: none; user-select: none;
-  font-size: 13px; font-weight: 600; color: var(--muted);
-  padding: 3px 6px; border-radius: 8px; transition: color .15s;
-}
-.tldr-summary::-webkit-details-marker { display: none; }
-.tldr-summary:hover { color: var(--accent-dk); }
-.tldr-chev { font-size: 9px; transition: transform .2s; }
-.tldr-details[open] .tldr-summary { color: var(--accent-dk); }
-.tldr-details[open] .tldr-chev { transform: rotate(180deg); }
-.tldr-details:not([open]) .tldr-body { display: none; }
+/* TL;DR: neutral panel under the buttons */
 .tldr-body {
-  margin: 10px auto 0; max-width: 720px;
-  padding: 14px 20px; text-align: left;
-  font-size: 15.5px; line-height: 1.55; color: var(--ink);
-  background: linear-gradient(180deg, rgba(20,133,90,.07), rgba(20,133,90,.04));
-  border: 1px solid rgba(20,133,90,.22);
-  border-left: 4px solid var(--accent);
-  border-radius: 12px;
+  margin: 26px auto 0; max-width: 700px;
+  padding: 16px 22px; text-align: left;
+  font-size: 16px; line-height: 1.6; color: var(--ink-soft);
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
 }
-.tldr-body b { color: var(--accent-dk); }
+.tldr-body b { color: var(--ink); font-weight: 700; }
 
 .title {
   font-size: clamp(28px, 4.6vw, 46px);
@@ -132,29 +116,33 @@ a:hover { text-decoration: underline; }
 .buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
-  margin: 15px auto 4px;
+  margin: 22px auto 0;
 }
-/* dark rounded-pill publication buttons (Nerfies / WiLoR style) */
+/* dark rounded-pill publication buttons (Nerfies / WiLoR style), text only */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 10px 20px;
+  display: inline-block;
+  padding: 8px 18px;
   border-radius: 999px;
   font-weight: 600;
-  font-size: 15px;
-  background: #363636;
+  font-size: 14.5px;
+  background: #2b2b2b;
   color: #fff;
   border: none;
   transition: background .18s ease;
 }
-.btn:hover { text-decoration: none; background: #1f1f1f; }
-.btn .ico { width: 17px; height: 17px; display: inline-block; }
+.btn:hover { text-decoration: none; background: #000; }
 /* keep all buttons the same dark pill (modifiers retained for markup compatibility) */
-.btn--ghost, .btn--accent { background: #363636; color: #fff; border: none; }
-.btn--ghost:hover, .btn--accent:hover { background: #1f1f1f; }
+.btn--ghost, .btn--accent { background: #2b2b2b; color: #fff; border: none; }
+.btn--ghost:hover, .btn--accent:hover { background: #000; }
+
+.buttons-note {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin: 10px auto 0;
+}
 
 /* ---------- Sections ---------- */
 section { padding: 52px 0; border-bottom: 1px solid var(--line); }
