@@ -122,8 +122,10 @@ a:hover { text-decoration: underline; }
 }
 /* dark rounded-pill publication buttons (Nerfies / WiLoR style), text only */
 .btn {
-  display: inline-block;
-  padding: 8px 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 17px;
   border-radius: 999px;
   font-weight: 600;
   font-size: 14.5px;
@@ -133,6 +135,7 @@ a:hover { text-decoration: underline; }
   transition: background .18s ease;
 }
 .btn:hover { text-decoration: none; background: #000; }
+.btn .ico { width: 15px; height: 15px; flex: none; }
 /* keep all buttons the same dark pill (modifiers retained for markup compatibility) */
 .btn--ghost, .btn--accent { background: #2b2b2b; color: #fff; border: none; }
 .btn--ghost:hover, .btn--accent:hover { background: #000; }
@@ -191,6 +194,15 @@ figure { margin: 0; }
 }
 .fig img { width: 100%; height: auto; display: block; border-radius: 8px; }
 .showcase { width: 100%; height: auto; display: block; border-radius: 8px; background: #000; }
+.video-embed {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+}
+.video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 figcaption {
   font-size: 14px; color: var(--muted);
   margin-top: 12px; line-height: 1.55;
